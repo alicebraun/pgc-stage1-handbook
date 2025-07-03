@@ -33,3 +33,7 @@ postimp_navi --out NAME --result results_FILE --addout SUFFIX --noldsc
 ```
 After the result danerfile with the LNO meta-analysis results is ready it needs to be moved to PGC DAC at:<br>
 `/gpfs/work5/0/pgcdac/DWFV2CJb8Piv_0116_pgc_data/scz/wave3/summary_stats/autosomes/lno/`
+
+# Readily available LNO results
+If the LNO has no special request—that is, if it involves a combination of excluded samples but simply leaves one sample out from the meta-analyses—these results are readily available at: <br>
+ `/gpfs/work5/0/pgcdac/DWFV2CJb8Piv_0116_pgc_data/scz/wave3/summary_stats/autosomes/PRS`

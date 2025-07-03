@@ -1,0 +1,70 @@
+# Instructions for Replication Analysis 
+***
+**Source document**: <br>  [Instructions for Replication Analysis](https://docs.google.com/document/d/1mvr2Kx2MrYaqlVIlE5nSpMePTO_qWkmSZySdT4AdBQw) <br>
+**Authors**: <br>
+Prof. Stephan Ripke, M.D., Ph.D., Group Leader, [ sripke@broadinstitute.org ](mailto:sripke@broadinstitute.org)<br>
+Dr. Swapnil Awasthi [swapnil.awasthi@charite.de](mailto:sawasthi@broadinstitute.org)  
+Alice Braun, B.A., M.Sc., [braun@broadinstitute.org](mailto:braun@broadinstitute.org)<br>
+***
+
+An example result of replication analysis [remeta10_repl*txt.repout.xls](https://docs.google.com/spreadsheets/u/1/d/11hiA0yjJ0lQOh7eHTw0SsonXvtShWIF1MMLxCPlnpvg/edit#gid=1316555210)  and its column descriptions [columns description](https://docs.google.com/document/d/18AJurD68zep_eMFH9939qd3ZFWDrL26exkVR_BwHUME/edit#).
+
+# Single replication data set 
+
+1. The discovery Results need to be in “ricopili-format”, e.g. datasets should have been analyzed (postimp module) with ricopili. Otherwise, you have to prepare files accordingly to the *1mhc and the *p3.gz file (see below).  
+2. Starting point is after a successful genome-wide association analysis.  
+3. By default, you will find *‘replic’* subdirectory in the directory ‘d*istribution/OUTNAME’*, where *OUTNAME* is specified by --out in postimp (association analysis) command in ricopili.   
+4. Alternatively, you can also prepare a new directory for replication by creating symbolic links to these two output files produced after association analysis.
+
+a)daner_OUTNAME.gz.p4.clump.areator.sorted.1mhc    *(Associated genomic regions (P<1e-4). Results have been clumped to account for linkage disequilibrium amongst SNPs)*
+
+*Example file: [https://docs.google.com/spreadsheets/d/1_Lzn6kVejd2hUk6V1eMfbMk5vhWb_4a7W9KVDP20pMo/edit#gid=0](https://docs.google.com/spreadsheets/d/1_Lzn6kVejd2hUk6V1eMfbMk5vhWb_4a7W9KVDP20pMo/edit#gid=0)*  
+b) daner_OUTNAME.gz.p3.gz (*Meta-analysis results for all SNPs with P < 1e-3*)  
+Example file:  
+[https://docs.google.com/spreadsheets/d/1HaKDj1XK_bLCZ92SqMRc7xiJpY55NiPjcvrmIR3UtrQ/edit#gid=0](https://docs.google.com/spreadsheets/d/1HaKDj1XK_bLCZ92SqMRc7xiJpY55NiPjcvrmIR3UtrQ/edit#gid=0)
+
+5. Open an interactive session.   
+     
+6. *In ‘replic’* or the directory that you prepared for replication analysis, run the following command  
+1) If the replication data is in daner format and is from exact same imputation reference. 
+
+*replicator13 --dan --areator daner_OUTNAME.p4.clump.areator.sorted.1mhc --gwas daner_OUTNAME.gz.p3.gz --format 7 --refdir /psych/genetics_data/ripke/references_outdated/hapmap_ref/impute2_ref/1KG_Aug12/ALL_1000G_phase1integrated_v3_impute_macGT1/subchr --index --trust --rep REPFILE*
+
+2) If the replication data is in daner format but it is not from the exact same imputation reference (remove --index flag: this will look for the LD friends)
+
+*replicator13 --dan --areator daner_OUTNAME.p4.clump.areator.sorted.1mhc --gwas daner_OUTNAME.gz.p3.gz --format 7 --refdir /psych/genetics_data/ripke/references_outdated/hapmap_ref/impute2_ref/1KG_Aug12/ALL_1000G_phase1integrated_v3_impute_macGT1/subchr --trust --rep REPFILE*
+
+3) If the replication data is not in [daner format](https://docs.google.com/document/d/1TWIhr8-qpCXB13WCXcU1_HDio8lC_MeWoAg2jlggrtU/edit) (use --format 0)
+
+*replicator13 --dan --areator daner_OUTNAME.p4.clump.areator.sorted.1mhc --gwas daner_OUTNAME.gz.p3.gz --format 0 --refdir /psych/genetics_data/ripke/references_outdated/hapmap_ref/impute2_ref/1KG_Aug12/ALL_1000G_phase1integrated_v3_impute_macGT1/subchr --index --trust --rep REPFILE*
+
+7. If it runs successfully, look at the remeta10_*.repout.xls file for the single results and sign test.  
+   Example of remeta10_repl*txt.repout.xls and its column descriptions.  
+   1. [remeta10_repl_panic_3GDES.gz.p4.clump.areator_NESDA_DECODE_DANISH_SA.1008.txt.repout.xls](https://docs.google.com/spreadsheets/d/11hiA0yjJ0lQOh7eHTw0SsonXvtShWIF1MMLxCPlnpvg/edit#gid=1316555210).  
+   2. [remeta_repl*txt.repout.xls columns description.](https://docs.google.com/document/d/18AJurD68zep_eMFH9939qd3ZFWDrL26exkVR_BwHUME/edit#)
+
+8. There will be 22 daner file for 22 chromosomes in ref_subdir* 
+
+# Multiple replication data sets
+
+1) Repeat Step 5 from the single replication data above for each replication file. This should be done in the same directory, specifying different --rep for each replication file (REPFILE_1,REPFILE_2...REPFILE_n). This results into a *daner file for each run.   
+2) To combine the results for all the replications into a single comparable result.   
+   a) Do a tail of tail ~/replicator_info
+
+   c) Copy the last ‘*replicator_meta11’ command* from there.  
+   d) Specify --out with your desired output name. Keep the output name small and informative.   
+   c) Give all *daner (see *daner) files as arguments to the command.  
+   d) The command should look like the below. Run this command on the interactive shell.      
+   
+
+*replicator_meta11 --ar3 --disc daner_OUTNAME.gz.p3.gz.repl_OUTNAME.gz.p4.clump.areator.sorted.filter.1mhc.LAST_REPFILE.repout.sub --out repl_XXXXXXX.txt.repout --minr2 .4 --areator daner_XXXX.p4.clump.areator.sorted.filter.1mhc *daner*  
+      
+*daner is an intermediate file created during each *replicator13*  run (i.e for each REPFILE)
+
+3) Look at the remeta10_repl_XXXXXXX.txt.repout.xls file for the single results and sign test.   
+   Example of remeta10_repl*txt.repout.xls and its column descriptions.  
+   1) [remeta10_repl_panic_3GDES.gz.p4.clump.areator_NESDA_DECODE_DANISH_SA.1008.txt.repout.xls](https://docs.google.com/spreadsheets/d/11hiA0yjJ0lQOh7eHTw0SsonXvtShWIF1MMLxCPlnpvg/edit#gid=1316555210).  
+   2)  [remeta_repl*txt.repout.xls columns description.](https://docs.google.com/document/d/18AJurD68zep_eMFH9939qd3ZFWDrL26exkVR_BwHUME/edit#)
+
+4) There will be 22 daner file for 22 chromosomes in every ref_subdir* 
+
